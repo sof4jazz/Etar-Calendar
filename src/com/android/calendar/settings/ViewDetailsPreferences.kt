@@ -26,10 +26,11 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
+import com.android.calendar.CalendarController
 import com.android.calendar.Utils
 import com.android.calendar.Utils.SHARED_PREFS_NAME
 import ws.xsoh.etar.R
-import java.util.Arrays
+import java.util.*
 
 
 class ViewDetailsPreferences : PreferenceFragmentCompat() {
@@ -84,9 +85,8 @@ class ViewDetailsPreferences : PreferenceFragmentCompat() {
 
     }
 
-    private class DynamicPreferences(private val context: Context) {
-        private val prefs: SharedPreferences = GeneralPreferences.getSharedPreferences(context)
 
+    private class DynamicPreferences(private val context: Context, private val prefs: SharedPreferences) {
         val preferenceKeys: PreferenceKeys
             get() {
                 val orientation = context.resources.configuration.orientation
@@ -116,19 +116,25 @@ class ViewDetailsPreferences : PreferenceFragmentCompat() {
         var LOCATION_VISIBILITY: Boolean
         @JvmField
         var MAX_LINES: Int
+        @JvmField
+        var ALWAYS_DISPLAY_EVENT_TEXT: Boolean
 
         constructor(context: Context) {
-            val prefs = DynamicPreferences(context)
+            val sharedPrefs: SharedPreferences = GeneralPreferences.getSharedPreferences(context)
+
+            val prefs = DynamicPreferences(context, sharedPrefs)
             val keys = prefs.preferenceKeys
             TIME_VISIBILITY = prefs.getTimeVisibility(keys)
             LOCATION_VISIBILITY = prefs.getShowLocation(keys)
             MAX_LINES = prefs.getMaxNumberOfLines(keys)
+            ALWAYS_DISPLAY_EVENT_TEXT = sharedPrefs.getBoolean(KEY_ALWAYS_DISPLAY_EVENT_TEXT_PREF, false)
         }
 
         private constructor(prefs: Preferences) {
             TIME_VISIBILITY = TimeVisibility.SHOW_NONE
             LOCATION_VISIBILITY = prefs.LOCATION_VISIBILITY
             MAX_LINES = prefs.MAX_LINES
+            ALWAYS_DISPLAY_EVENT_TEXT = prefs.ALWAYS_DISPLAY_EVENT_TEXT
         }
 
         fun hideTime(): Preferences {
@@ -161,6 +167,7 @@ class ViewDetailsPreferences : PreferenceFragmentCompat() {
         private const val KEY_DISPLAY_LOCATION_H_PREF = "pref_display_location_horizontal"
         private const val KEY_MAX_NUMBER_OF_LINES_V_PREF = "pref_number_of_lines_vertical"
         private const val KEY_MAX_NUMBER_OF_LINES_H_PREF = "pref_number_of_lines_horizontal"
+        private const val KEY_ALWAYS_DISPLAY_EVENT_TEXT_PREF = "pref_always_display_event_text"
 
         private val LANDSCAPE_PREFS = PreferenceKeys(KEY_DISPLAY_TIME_H_PREF, KEY_DISPLAY_LOCATION_H_PREF, KEY_MAX_NUMBER_OF_LINES_H_PREF)
         private val PORTRAIT_PREFS = PreferenceKeys(KEY_DISPLAY_TIME_V_PREF, KEY_DISPLAY_LOCATION_V_PREF, KEY_MAX_NUMBER_OF_LINES_V_PREF)

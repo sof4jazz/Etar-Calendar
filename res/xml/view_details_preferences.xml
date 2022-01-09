@@ -38,4 +38,10 @@
             android:title="@string/display_location"
             android:defaultValue="false" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/preferences_day_view">
+        <SwitchPreference
+            android:key="pref_always_display_event_text"
+            android:title="@string/always_display_event_text"
+            android:defaultValue="false" />
+    </PreferenceCategory>
 </PreferenceScreen>

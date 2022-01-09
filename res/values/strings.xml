@@ -453,6 +453,9 @@
     <!-- This is the title of a section in the Settings screen for settings
          related to viewing calendar events in Month view for landscape orientation -->
     <string name="preferences_month_view_landscape">Month view layout (Landscape)</string>
+    <!-- This is the title of a section in the Settings screen for settings
+         related to viewing calendar events in Week/Day view -->
+    <string name="preferences_day_view">Day/week view layout</string>
 
     <!-- This is the title of a section in the Settings screen for settings
          related to app theme -->
@@ -484,6 +487,7 @@
     <string name="display_time">Display time</string>
     <string name="display_location">Display location</string>
     <string name="maximum_number_of_lines">Max number of lines in event</string>
+    <string name="always_display_event_text">Always display event text</string>
 
     <string name="default_start_last">Previously used view</string>
     <!-- Settings week start label to start week on specific day-->

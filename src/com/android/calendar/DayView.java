@@ -80,6 +80,7 @@ import android.widget.ViewSwitcher;
 import com.android.calendar.CalendarController.EventType;
 import com.android.calendar.CalendarController.ViewType;
 import com.android.calendar.settings.GeneralPreferences;
+import com.android.calendar.settings.ViewDetailsPreferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -653,6 +654,8 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     private boolean mTouchExplorationEnabled = false;
     private final String mCreateNewEventString;
     private final String mNewEventHintString;
+
+    private ViewDetailsPreferences.Preferences mViewDetailsPreferences;
 
     public DayView(Context context, CalendarController controller,
             ViewSwitcher viewSwitcher, EventLoader eventLoader, int numDays) {
@@ -2182,6 +2185,9 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
     @Override
     protected void onDraw(Canvas canvas) {
+
+        mViewDetailsPreferences = ViewDetailsPreferences.Companion.getPreferences(mContext);
+
         if (mRemeasure) {
             remeasure(getWidth(), getHeight());
             mRemeasure = false;
@@ -3590,8 +3596,8 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         int width = rect.right - rect.left;
         int height = rect.bottom - rect.top;
 
-        // If the rectangle is too small for text, then return
-        if (eventLayout == null || width < MIN_CELL_WIDTH_FOR_TEXT) {
+        // If the rectangle is too small for text and "always display text" is disabled, then return
+        if (eventLayout == null || (!mViewDetailsPreferences.ALWAYS_DISPLAY_EVENT_TEXT && width < MIN_CELL_WIDTH_FOR_TEXT)) {
             return;
         }
 
