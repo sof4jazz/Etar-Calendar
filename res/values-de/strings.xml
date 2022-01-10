@@ -284,6 +284,7 @@
     <string name="view_settings">Ansichtseinstellungen</string>
     <string name="preferences_month_view_portrait">Monatsansicht (Portrait)</string>
     <string name="preferences_month_view_landscape">Monatsansicht (Landscape)</string>
+    <string name="preferences_day_view">Wochen-/Tagesansicht</string>
     <string name="display_options">Anzeigeoptionen</string>
     <string name="display_time">Zeit anzeigen</string>
     <string name="display_location">Ort anzeigen</string>
@@ -292,6 +293,7 @@
     <string name="show_time_start_end">Start- und Endzeit</string>
     <string name="show_time_start_end_below">Start- und Endzeit unterhalb des Termins</string>
     <string name="maximum_number_of_lines">Maximale Zeilenanzahl pro Kalendereintrag</string>
+    <string name="always_display_event_text">Termintext immer anzeigen</string>
     <string name="foreground_notification_channel_name">Aufgaben im Hintergrund</string>
     <string name="foreground_notification_channel_description">Benachrichtigungen sind für die interne Synchronisierung erforderlich. Du kannst diesen Kanal sicher ausblenden.</string>
     <string name="cal_import_error_time_zone_msg">Zeitzone konnte nicht erkannt werden: %s</string>
