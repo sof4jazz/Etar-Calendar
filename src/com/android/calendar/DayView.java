@@ -34,6 +34,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -337,6 +338,8 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     private final Rect mSelectionRect = new Rect();
     // This encloses the more allDay events icon
     private final Rect mExpandAllDayRect = new Rect();
+    // Float Rect for rounded corners of events
+    private final RectF mRectF = new RectF();
     // TODO Clean up paint usage
     private final Paint mPaint = new Paint();
     private final Paint mEventTextPaint = new Paint();
@@ -2790,7 +2793,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         return box;
     }
 
-    private void setupTextRect(Rect r) {
+    private void setupTextRect(RectF r) {
         if (r.bottom <= r.top || r.right <= r.left) {
             r.bottom = r.top;
             r.right = r.left;
@@ -2807,7 +2810,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         }
     }
 
-    private void setupAllDayTextRect(Rect r) {
+    private void setupAllDayTextRect(RectF r) {
         if (r.bottom <= r.top || r.right <= r.left) {
             r.bottom = r.top;
             r.right = r.left;
@@ -2828,7 +2831,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
      * Return the layout for a numbered event. Create it if not already existing
      */
     private StaticLayout getEventLayout(StaticLayout[] layouts, int i, Event event, Paint paint,
-            Rect r) {
+            RectF r) {
         if (i < 0 || i >= layouts.length) {
             return null;
         }
@@ -2875,8 +2878,8 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
             }
 
             // Leave a one pixel boundary on the left and right of the rectangle for the event
-            layout = new StaticLayout(bob, 0, bob.length(), new TextPaint(paint), r.width(),
-                    Alignment.ALIGN_NORMAL, 1.0f, 0.0f, true, null, r.width());
+            layout = new StaticLayout(bob, 0, bob.length(), new TextPaint(paint), Math.round(r.width()),
+                    Alignment.ALIGN_NORMAL, 1.0f, 0.0f, true, null, Math.round(r.width()));
 
             layouts[i] = layout;
         }
@@ -2989,7 +2992,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                     event.bottom = allDayEventClip;
                 }
             }
-            Rect r = drawEventRect(event, canvas, p, eventTextPaint, (int) event.top,
+            RectF r = drawEventRect(event, canvas, p, eventTextPaint, (int) event.top,
                     (int) event.bottom);
             setupAllDayTextRect(r);
             StaticLayout layout = getEventLayout(mAllDayLayouts, i, event, eventTextPaint, r);
@@ -3157,7 +3160,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                 mSelectedEvents.add(event);
             }
 
-            Rect r = drawEventRect(event, canvas, p, eventTextPaint, mViewStartY, viewEndY);
+            RectF r = drawEventRect(event, canvas, p, eventTextPaint, mViewStartY, viewEndY);
             setupTextRect(r);
 
             // Don't draw text if it is not visible
@@ -3464,10 +3467,10 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         setSelectedEvent(startEvent);
     }
 
-    private Rect drawEventRect(Event event, Canvas canvas, Paint p, Paint eventTextPaint,
+    private RectF drawEventRect(Event event, Canvas canvas, Paint p, Paint eventTextPaint,
             int visibleTop, int visibleBot) {
         // Draw the Event Rect
-        Rect r = mRect;
+        RectF r = mRectF;
         r.top = Math.max((int) event.top + EVENT_RECT_TOP_MARGIN, visibleTop);
         r.bottom = Math.min((int) event.bottom - EVENT_RECT_BOTTOM_MARGIN, visibleBot);
         r.left = (int) event.left + EVENT_RECT_LEFT_MARGIN;
@@ -3511,7 +3514,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         p.setColor(color);
         int alpha = p.getAlpha();
         p.setAlpha(mEventsAlpha);
-        canvas.drawRect(r, p);
+        canvas.drawRoundRect(r, 0.5f, 0.5f, p);
         p.setAlpha(alpha);
         p.setStyle(Style.FILL);
 
@@ -3583,12 +3586,12 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         return string.replace('\n', ' ');
     }
 
-    private void drawEventText(StaticLayout eventLayout, Rect rect, Canvas canvas, int top,
-            int bottom, boolean center) {
+    private void drawEventText(StaticLayout eventLayout, RectF rect, Canvas canvas, float top,
+            float bottom, boolean center) {
         // drawEmptyRect(canvas, rect, 0xFFFF00FF); // for debugging
 
-        int width = rect.right - rect.left;
-        int height = rect.bottom - rect.top;
+        float width = rect.right - rect.left;
+        float height = rect.bottom - rect.top;
 
         // If the rectangle is too small for text, then return
         if (eventLayout == null || width < MIN_CELL_WIDTH_FOR_TEXT) {
@@ -3615,7 +3618,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         // Use a StaticLayout to format the string.
         canvas.save();
       //  canvas.translate(rect.left, rect.top + (rect.bottom - rect.top / 2));
-        int padding = center? (rect.bottom - rect.top - totalLineHeight) / 2 : 0;
+        float padding = center? (rect.bottom - rect.top - totalLineHeight) / 2 : 0;
         canvas.translate(rect.left, rect.top + padding);
         rect.left = 0;
         rect.right = width;
