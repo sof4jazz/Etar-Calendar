@@ -2862,14 +2862,12 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                     paint.setColor(event.color);
                     break;
                 case Attendees.ATTENDEE_STATUS_DECLINED:
-                    paint.setColor(mEventTextColor);
                     paint.setAlpha(Utils.DECLINED_EVENT_TEXT_ALPHA);
-                    break;
                 case Attendees.ATTENDEE_STATUS_NONE: // Your own events
                 case Attendees.ATTENDEE_STATUS_ACCEPTED:
                 case Attendees.ATTENDEE_STATUS_TENTATIVE:
                 default:
-                    paint.setColor(mEventTextColor);
+                    paint.setColor(Utils.getAdaptiveTextColor(mContext, mEventTextColor, event.color));
                     break;
             }
 
@@ -2886,7 +2884,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
             layouts[i] = layout;
         }
-        layout.getPaint().setAlpha(mEventsAlpha);
+        layout.getPaint().setAlpha(Utils.getAdaptiveTextAlpha(mContext, mEventsAlpha, event.color));
         return layout;
     }
 
