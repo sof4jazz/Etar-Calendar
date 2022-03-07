@@ -228,6 +228,7 @@ public class CalendarToolbarHandler {
 
     private String buildWeekNum() {
         int week = Utils.getWeekNumberFromTime(mMilliTime, mContext);
+        String str = mContext.getResources().getQuantityString(R.plurals.weekN, week, week);
         return mContext.getResources().getQuantityString(R.plurals.weekN, week, week);
     }
 }
