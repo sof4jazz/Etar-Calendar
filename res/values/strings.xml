@@ -131,6 +131,7 @@
          item allows the user to delete an existing event. -->
     <string name="event_delete">"Delete event"</string>
     <string name="share_label">Share</string>
+    <string name="copy_label">Copy</string>
     <!-- This is a label on a menu item. Pressing this menu
          item takes the user to the current day (today) in whatever view
          (Day view, Week view, Agenda view, Month view) they are currently in. -->

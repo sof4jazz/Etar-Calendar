@@ -28,6 +28,11 @@
         android:title="@string/choose_event_color_label"
         android:visible="false"
         app:showAsAction="always" />
+    <item android:id="@+id/info_action_copy"
+        android:alphabeticShortcut="o"
+        android:title="@string/copy_label"
+        android:icon="@drawable/ic_copy_event"
+        app:showAsAction="always" />
     <item android:id="@+id/info_action_edit"
         android:alphabeticShortcut="e"
         android:enabled="false"

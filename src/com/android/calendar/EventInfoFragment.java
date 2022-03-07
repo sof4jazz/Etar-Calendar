@@ -242,7 +242,9 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         Events.CUSTOM_APP_URI,       // 20
         Events.DTEND,                // 21
         Events.DURATION,             // 22
-        Events.ORIGINAL_SYNC_ID      // 23 do not remove; used in DeleteEventHelper
+        Events.ORIGINAL_SYNC_ID,     // 23 do not remove; used in DeleteEventHelper
+        Events.AVAILABILITY,         // 24
+        Events.ACCESS_LEVEL          // 25
     };
     private static final int EVENT_INDEX_ID = 0;
     private static final int EVENT_INDEX_TITLE = 1;
@@ -267,6 +269,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private static final int EVENT_INDEX_CUSTOM_APP_URI = 20;
     private static final int EVENT_INDEX_DTEND = 21;
     private static final int EVENT_INDEX_DURATION = 22;
+    private static final int EVENT_INDEX_AVAILABILITY = 24;
     private static final String[] ATTENDEES_PROJECTION = new String[] {
         Attendees._ID,                      // 0
         Attendees.ATTENDEE_NAME,            // 1
@@ -1110,6 +1113,8 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             shareEvent(ShareType.INTENT);
         } else if (itemId == R.id.info_action_export) {
             shareEvent(ShareType.SDCARD);
+        } else if (itemId == R.id.info_action_copy) {
+            copyEvent();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -1256,6 +1261,24 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             Log.e(TAG, "Couldn't generate ics file");
             Toast.makeText(mActivity, R.string.error_generating_ics, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void copyEvent() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setClass(mContext, EditEventActivity.class);
+        intent.putExtra(EXTRA_EVENT_BEGIN_TIME, mStartMillis);
+        intent.putExtra(EXTRA_EVENT_END_TIME, mEndMillis);
+        intent.putExtra(EXTRA_EVENT_ALL_DAY, mAllDay);
+//        intent.putExtra(Events.CALENDAR_ID, calendarId);
+        intent.putExtra(Events.TITLE, mEventCursor.getString(EVENT_INDEX_TITLE));
+        intent.putExtra(Events.DESCRIPTION, mEventCursor.getString(EVENT_INDEX_DESCRIPTION));
+        intent.putExtra(Events.EVENT_LOCATION, mEventCursor.getString(EVENT_INDEX_EVENT_LOCATION));
+        intent.putExtra(Events.EVENT_TIMEZONE, mEventCursor.getString(EVENT_INDEX_EVENT_TIMEZONE));
+        intent.putExtra(Events.RRULE, mEventCursor.getString(EVENT_INDEX_RRULE));
+//        intent.putExtra(Events.AVAILABILITY, mEventCursor.getInt(EVENT_INDEX_AVAILABILITY));
+//        intent.putExtra(Events.ACCESS_LEVEL, mEventCursor.getInt(EVENT_INDEX_ACCESS_LEVEL));
+//        mEventId = -1;
+        mContext.startActivity(intent);
     }
 
     private void showEventColorPickerDialog() {
